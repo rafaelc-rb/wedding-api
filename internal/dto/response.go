@@ -85,10 +85,56 @@ type GuestSummary struct {
 	ConfirmedAt *string `json:"confirmed_at"`
 }
 
+// Gifts
+
+type GiftResponse struct {
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Description string  `json:"description,omitempty"`
+	Price       float64 `json:"price"`
+	ImageURL    string  `json:"image_url,omitempty"`
+	Category    string  `json:"category"`
+	Status      string  `json:"status"`
+	CreatedAt   string  `json:"created_at"`
+	UpdatedAt   string  `json:"updated_at"`
+}
+
+// Payments
+
+type PurchaseResponse struct {
+	PaymentID    string  `json:"payment_id"`
+	ProviderID   string  `json:"provider_id"`
+	Status       string  `json:"status"`
+	QRCode       string  `json:"qr_code,omitempty"`
+	QRCodeBase64 string  `json:"qr_code_base64,omitempty"`
+	ExpiresAt    *string `json:"expires_at,omitempty"`
+}
+
+type PaymentResponse struct {
+	ID            string  `json:"id"`
+	GiftID        string  `json:"gift_id"`
+	ProviderID    string  `json:"provider_id,omitempty"`
+	Amount        float64 `json:"amount"`
+	Status        string  `json:"status"`
+	PaymentMethod string  `json:"payment_method"`
+	PayerName     string  `json:"payer_name"`
+	PayerEmail    string  `json:"payer_email,omitempty"`
+	Message       string  `json:"message,omitempty"`
+	PaidAt        *string `json:"paid_at"`
+	CreatedAt     string  `json:"created_at"`
+}
+
+type PaymentStatusResponse struct {
+	PaymentID string `json:"payment_id"`
+	Status    string `json:"status"`
+	GiftName  string `json:"gift_name"`
+}
+
 // Dashboard
 
 type DashboardResponse struct {
-	RSVP RSVPStats `json:"rsvp"`
+	RSVP  RSVPStats  `json:"rsvp"`
+	Gifts *GiftStats `json:"gifts,omitempty"`
 }
 
 type RSVPStats struct {
@@ -98,4 +144,12 @@ type RSVPStats struct {
 	Pending          int     `json:"pending"`
 	Declined         int     `json:"declined"`
 	ConfirmationRate float64 `json:"confirmation_rate"`
+}
+
+type GiftStats struct {
+	TotalGifts    int     `json:"total_gifts"`
+	Purchased     int     `json:"purchased"`
+	Available     int     `json:"available"`
+	TotalRevenue  float64 `json:"total_revenue"`
+	TotalPayments int     `json:"total_payments"`
 }

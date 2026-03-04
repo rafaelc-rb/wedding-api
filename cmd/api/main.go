@@ -14,9 +14,12 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/config"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/database"
+	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/gateway"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web"
+	giftuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/gift"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/guest"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/invitation"
+	paymentuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/payment"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/rsvp"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/wedding"
 )
@@ -47,11 +50,27 @@ func main() {
 	weddingRepo := database.NewWeddingRepository(db)
 	invitationRepo := database.NewInvitationRepository(db)
 	guestRepo := database.NewGuestRepository(db)
+	giftRepo := database.NewGiftRepository(db)
+	paymentRepo := database.NewPaymentRepository(db)
 
 	weddingUC := wedding.NewUseCase(weddingRepo, cfg.JWTSecret, cfg.JWTExpirationHours)
 	rsvpUC := rsvp.NewUseCase(guestRepo, invitationRepo)
 	invitationUC := invitation.NewUseCase(invitationRepo, guestRepo)
 	guestUC := guest.NewUseCase(guestRepo, invitationRepo)
+	giftUC := giftuc.NewUseCase(giftRepo, paymentRepo)
+
+	var paymentUC *paymentuc.UseCase
+	if cfg.MPAccessToken != "" {
+		mpGateway, err := gateway.NewMercadoPagoGateway(cfg.MPAccessToken, cfg.MPNotificationURL, cfg.MPPixExpirationMin)
+		if err != nil {
+			slog.Error("failed to init mercado pago gateway", "error", err)
+			os.Exit(1)
+		}
+		paymentUC = paymentuc.NewUseCase(paymentRepo, giftRepo, mpGateway)
+		slog.Info("mercado pago gateway initialized")
+	} else {
+		slog.Warn("MP_ACCESS_TOKEN not set — payment endpoints will return 503")
+	}
 
 	if cfg.SeedAdminEmail != "" && cfg.SeedAdminPassword != "" {
 		if err := seedWedding(weddingUC, cfg); err != nil {
@@ -65,6 +84,8 @@ func main() {
 		RSVPUC:       rsvpUC,
 		InvitationUC: invitationUC,
 		GuestUC:      guestUC,
+		GiftUC:       giftUC,
+		PaymentUC:    paymentUC,
 		WeddingRepo:  weddingRepo,
 		JWTSecret:    cfg.JWTSecret,
 		CORSOrigins:  cfg.CORSAllowedOrigins,

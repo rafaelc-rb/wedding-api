@@ -34,22 +34,24 @@ Feature principal. Sem isso, os convidados não conseguem confirmar presença.
 - [ ] Testes unitários dos use cases
 - [ ] Integração com o frontend (ajustar form action + JS de submit)
 
-## Fase 3 — Lista de Presentes `URGENTE`
+## Fase 3 — Lista de Presentes ✅
 
 Substituir o Casar.com por solução própria com PIX e cartão.
 
-- [ ] Entidades Gift + Payment
-- [ ] Migrações SQL
-- [ ] Repositórios SQLite (scoped por wedding_id)
-- [ ] Integração Mercado Pago (SDK Go) para PIX e cartão
-- [ ] Use case: listar presentes (público, por tenant)
-- [ ] Use case: iniciar pagamento (público)
-- [ ] Use case: webhook de confirmação (Mercado Pago → API)
-- [ ] Use case: CRUD de presentes (admin, scoped)
-- [ ] Use case: relatório financeiro (admin, scoped)
-- [ ] Handlers públicos: `/w/{weddingId}/gifts`, `/w/{weddingId}/gifts/{id}/purchase`
-- [ ] Handlers admin
-- [ ] Testes
+- [x] Entidades Gift + Payment
+- [x] Migrações SQL (004_create_gifts, 005_create_payments)
+- [x] Repositórios SQLite (scoped por wedding_id)
+- [x] Integração Mercado Pago (SDK Go v1.8.0) para PIX e cartão
+- [x] Gateway com graceful degradation (503 se MP_ACCESS_TOKEN não configurado)
+- [x] Use case: listar presentes (público, por tenant)
+- [x] Use case: iniciar pagamento (público — PIX + cartão)
+- [x] Use case: webhook de confirmação (Mercado Pago → API)
+- [x] Use case: CRUD de presentes (admin, scoped)
+- [x] Use case: dashboard com stats de gifts + receita (admin, scoped)
+- [x] Handlers públicos: `/w/{weddingId}/gifts`, `/w/{weddingId}/gifts/{id}/purchase`, `/payments/{id}/status`
+- [x] Handlers admin: CRUD gifts, listagem/detalhe payments
+- [x] Webhook: `POST /payments/webhook`
+- [ ] Testes unitários dos use cases
 - [ ] Integração com o frontend
 
 ## Fase 4 — Polimento
@@ -78,6 +80,6 @@ Evoluções para oferecer o serviço a outros casais.
 |------|-----------|------|
 | Fase 1 | ~~Bloqueante~~ ✅ | — |
 | Fase 2 | ~~Urgente~~ ✅ | — |
-| Fase 3 | Urgente | Após Fase 2 |
+| Fase 3 | ~~Urgente~~ ✅ | — |
 | Fase 4 | Importante | Antes do casamento (07.07.2026) |
 | Fase 5 | Futuro | Pós-casamento |

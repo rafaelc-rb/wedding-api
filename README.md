@@ -17,7 +17,7 @@ Cada casamento é um tenant isolado. O primeiro tenant é o casamento **Manoela 
 | Configuração | [envconfig](https://github.com/kelseyhightower/envconfig) + [godotenv](https://github.com/joho/godotenv) | v1.4.0 / v1.5.1 |
 | Autenticação admin | JWT ([golang-jwt](https://github.com/golang-jwt/jwt)) | v5.3.1 |
 | Validação | [go-playground/validator](https://github.com/go-playground/validator) | v10.30.1 |
-| Pagamentos | [Mercado Pago SDK Go](https://github.com/mercadopago/sdk-go) (PIX + cartão) | — |
+| Pagamentos | [Mercado Pago SDK Go](https://github.com/mercadopago/sdk-go) (PIX + cartão) | v1.8.0 |
 | UUID | [google/uuid](https://github.com/google/uuid) | v1.6.0 |
 | Crypto | [golang.org/x/crypto](https://pkg.go.dev/golang.org/x/crypto) (bcrypt) | v0.48.0 |
 | Logging | `log/slog` (stdlib) | — |
@@ -48,18 +48,18 @@ O servidor sobe em `http://localhost:8080`. O arquivo `.env` é carregado automa
 ├── cmd/api/              # Entrypoint (bootstrap, graceful shutdown)
 ├── internal/
 │   ├── domain/           # Entidades e interfaces de repositório
-│   │   ├── entity/       # Wedding, Invitation, Guest, erros de domínio
-│   │   └── repository/   # Interfaces (Wedding, Invitation, Guest)
-│   ├── usecase/          # Casos de uso (wedding, rsvp, invitation, guest)
+│   │   ├── entity/       # Wedding, Invitation, Guest, Gift, Payment, erros
+│   │   └── repository/   # Interfaces (Wedding, Invitation, Guest, Gift, Payment)
+│   ├── usecase/          # Casos de uso (wedding, rsvp, invitation, guest, gift, payment)
 │   ├── dto/              # Objetos de transferência (request/response)
 │   └── infra/
 │       ├── database/     # Conexão SQLite, migrações, repositórios
-│       ├── gateway/      # Clientes externos (Mercado Pago — futuro)
+│       ├── gateway/      # Mercado Pago SDK (PIX + cartão)
 │       ├── web/
-│       │   ├── handler/  # auth, rsvp, invitation, guest, dashboard, health
+│       │   ├── handler/  # auth, rsvp, invitation, guest, gift, payment, dashboard
 │       │   └── middleware/ # Auth JWT, TenantResolver, Logger, Recovery
 │       └── config/       # Leitura de env vars
-├── migrations/           # SQL migrations (001-003 implementadas)
+├── migrations/           # SQL migrations (001-005)
 ├── docs/                 # Documentação detalhada
 └── .cursor/rules/        # Convenções para o Cursor AI
 ```

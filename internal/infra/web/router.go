@@ -10,8 +10,10 @@ import (
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/repository"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web/handler"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web/middleware"
+	giftuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/gift"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/guest"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/invitation"
+	paymentuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/payment"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/rsvp"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/wedding"
 )
@@ -21,6 +23,8 @@ type RouterDeps struct {
 	RSVPUC       *rsvp.UseCase
 	InvitationUC *invitation.UseCase
 	GuestUC      *guest.UseCase
+	GiftUC       *giftuc.UseCase
+	PaymentUC    *paymentuc.UseCase
 	WeddingRepo  repository.WeddingRepository
 	JWTSecret    string
 	CORSOrigins  string
@@ -47,7 +51,9 @@ func NewRouter(deps RouterDeps) *chi.Mux {
 	rsvpHandler := handler.NewRSVPHandler(deps.RSVPUC)
 	invHandler := handler.NewInvitationHandler(deps.InvitationUC)
 	guestHandler := handler.NewGuestHandler(deps.GuestUC)
-	dashHandler := handler.NewDashboardHandler(deps.GuestUC)
+	giftHandler := handler.NewGiftHandler(deps.GiftUC)
+	paymentHandler := handler.NewPaymentHandler(deps.PaymentUC)
+	dashHandler := handler.NewDashboardHandler(deps.GuestUC, deps.GiftUC)
 
 	r.Route("/api/v1", func(r chi.Router) {
 		r.Get("/health", handler.Health)
@@ -58,7 +64,15 @@ func NewRouter(deps RouterDeps) *chi.Mux {
 
 			r.Post("/rsvp", rsvpHandler.Confirm)
 			r.Get("/rsvp/invitation", rsvpHandler.LookupInvitation)
+
+			r.Get("/gifts", giftHandler.ListPublic)
+			r.Get("/gifts/{id}", giftHandler.GetPublic)
+			r.Post("/gifts/{id}/purchase", paymentHandler.Purchase)
+			r.Get("/payments/{id}/status", paymentHandler.GetStatus)
 		})
+
+		// Webhook (sem auth — validação via assinatura do provider)
+		r.Post("/payments/webhook", paymentHandler.Webhook)
 
 		// Autenticação
 		r.Post("/admin/auth", authHandler.Login)
@@ -84,10 +98,20 @@ func NewRouter(deps RouterDeps) *chi.Mux {
 				r.Put("/{id}", guestHandler.Update)
 				r.Delete("/{id}", guestHandler.Delete)
 			})
-		})
 
-		// Webhook (sem auth — validação via assinatura do provider)
-		// r.Post("/payments/webhook", paymentHandler.Webhook) — Fase 3
+			r.Route("/gifts", func(r chi.Router) {
+				r.Get("/", giftHandler.List)
+				r.Post("/", giftHandler.Create)
+				r.Get("/{id}", giftHandler.GetByID)
+				r.Put("/{id}", giftHandler.Update)
+				r.Delete("/{id}", giftHandler.Delete)
+			})
+
+			r.Route("/payments", func(r chi.Router) {
+				r.Get("/", paymentHandler.ListAdmin)
+				r.Get("/{id}", paymentHandler.GetAdmin)
+			})
+		})
 	})
 
 	return r

@@ -118,11 +118,16 @@ GET /api/v1/w/{weddingId}/gifts?category=cozinha
       "price": 350.00,
       "image_url": "https://...",
       "category": "Cozinha",
-      "status": "available"
+      "status": "available",
+      "created_at": "2026-03-01T10:00:00Z",
+      "updated_at": "2026-03-01T10:00:00Z"
     }
   ],
-  "meta": { "total": 42, "available": 30, "purchased": 12 }
+  "meta": { "page": 1, "per_page": 20, "total": 30, "total_pages": 2 }
 }
+```
+
+A listagem pública mostra apenas presentes com status `available`. Filtros opcionais: `?category=Cozinha&search=panela&page=1&per_page=20`.
 ```
 
 ### Detalhar Presente
@@ -264,23 +269,18 @@ GET /api/v1/admin/dashboard
     "pending": 75,
     "declined": 5,
     "confirmation_rate": 61.5
+  },
+  "gifts": {
+    "total_gifts": 50,
+    "purchased": 18,
+    "available": 32,
+    "total_revenue": 6500.00,
+    "total_payments": 18
   }
 }
 ```
 
-> Na Fase 3, o dashboard incluirá também estatísticas de presentes:
->
-> ```json
-> {
->   "gifts": {
->     "total_gifts": 50,
->     "purchased": 18,
->     "available": 32,
->     "total_revenue": 6500.00,
->     "total_payments": 18
->   }
-> }
-```
+> O campo `gifts` só aparece quando há presentes cadastrados.
 
 ### Convites (Invitations)
 
@@ -338,17 +338,17 @@ POST   /api/v1/admin/invitations/{id}/guests  # adicionar a convite existente
 ### Presentes (Gifts)
 
 ```
-GET    /api/v1/admin/gifts                # listar (inclui purchased)
+GET    /api/v1/admin/gifts                # listar (?page=1&per_page=20&category=Cozinha&status=available&search=panela)
 POST   /api/v1/admin/gifts                # criar
-GET    /api/v1/admin/gifts/{id}           # detalhar (inclui pagamentos)
+GET    /api/v1/admin/gifts/{id}           # detalhar
 PUT    /api/v1/admin/gifts/{id}           # atualizar
-DELETE /api/v1/admin/gifts/{id}           # remover (só sem pagamento)
+DELETE /api/v1/admin/gifts/{id}           # remover
 ```
 
 ### Pagamentos
 
 ```
-GET /api/v1/admin/payments                # listar (?status=approved&gift_id=uuid)
+GET /api/v1/admin/payments                # listar (?page=1&per_page=20&status=approved&gift_id=uuid)
 GET /api/v1/admin/payments/{id}           # detalhar
 ```
 
@@ -369,6 +369,7 @@ GET /api/v1/admin/payments/{id}           # detalhar
 | 404 | Recurso não encontrado ou wedding_id inválido |
 | 409 | Conflito (ex: presença já confirmada, presente indisponível) |
 | 500 | Erro interno |
+| 503 | Serviço indisponível (ex: pagamentos sem MP_ACCESS_TOKEN) |
 
 ---
 

@@ -5,39 +5,54 @@ import (
 
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/dto"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web/middleware"
+	giftuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/gift"
 	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/guest"
 )
 
 type DashboardHandler struct {
 	guestUC *guest.UseCase
+	giftUC  *giftuc.UseCase
 }
 
-func NewDashboardHandler(guestUC *guest.UseCase) *DashboardHandler {
-	return &DashboardHandler{guestUC: guestUC}
+func NewDashboardHandler(guestUC *guest.UseCase, giftUC *giftuc.UseCase) *DashboardHandler {
+	return &DashboardHandler{guestUC: guestUC, giftUC: giftUC}
 }
 
 func (h *DashboardHandler) Get(w http.ResponseWriter, r *http.Request) {
 	weddingID := middleware.GetWeddingID(r.Context())
 
-	stats, err := h.guestUC.Dashboard(r.Context(), weddingID)
+	rsvpStats, err := h.guestUC.Dashboard(r.Context(), weddingID)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, "Erro ao buscar estatísticas.")
 		return
 	}
 
-	var rate float64
-	if stats.TotalGuests > 0 {
-		rate = float64(stats.Confirmed) / float64(stats.TotalGuests) * 100
+	var rsvpRate float64
+	if rsvpStats.TotalGuests > 0 {
+		rsvpRate = float64(rsvpStats.Confirmed) / float64(rsvpStats.TotalGuests) * 100
 	}
 
-	respondJSON(w, http.StatusOK, dto.DashboardResponse{
+	resp := dto.DashboardResponse{
 		RSVP: dto.RSVPStats{
-			TotalInvitations: stats.TotalInvitations,
-			TotalGuests:      stats.TotalGuests,
-			Confirmed:        stats.Confirmed,
-			Pending:          stats.Pending,
-			Declined:         stats.Declined,
-			ConfirmationRate: rate,
+			TotalInvitations: rsvpStats.TotalInvitations,
+			TotalGuests:      rsvpStats.TotalGuests,
+			Confirmed:        rsvpStats.Confirmed,
+			Pending:          rsvpStats.Pending,
+			Declined:         rsvpStats.Declined,
+			ConfirmationRate: rsvpRate,
 		},
-	})
+	}
+
+	giftStats, err := h.giftUC.Dashboard(r.Context(), weddingID)
+	if err == nil && giftStats.TotalGifts > 0 {
+		resp.Gifts = &dto.GiftStats{
+			TotalGifts:    giftStats.TotalGifts,
+			Purchased:     giftStats.Purchased,
+			Available:     giftStats.Available,
+			TotalRevenue:  giftStats.TotalRevenue,
+			TotalPayments: giftStats.TotalPayments,
+		}
+	}
+
+	respondJSON(w, http.StatusOK, resp)
 }

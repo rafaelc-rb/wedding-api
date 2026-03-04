@@ -119,7 +119,7 @@ Token stateless com `wedding_id` e `email` nos claims, assinado com HMAC-SHA256.
 
 ### Mercado Pago (pagamentos)
 
-Gateway para lista de presentes. SDK oficial em Go. PIX (~0.5% taxa) e cartão (~4-5%). Checkout Transparente. Inicialmente com credenciais globais (via env). Detalhes em [gift-list.md](gift-list.md).
+Gateway para lista de presentes. SDK oficial em Go (v1.8.0). PIX (~0.5% taxa) e cartão (~4-5%). Checkout Transparente. Credenciais globais via env (futuro: por tenant). Gateway com graceful degradation — se `MP_ACCESS_TOKEN` não estiver configurado, endpoints de pagamento retornam `503 Service Unavailable`. Detalhes em [gift-list.md](gift-list.md).
 
 ### Validação com go-playground/validator
 
@@ -150,15 +150,15 @@ mr-wedding-api/
 │   │   │   ├── wedding.go             # Entidade Wedding (tenant)
 │   │   │   ├── invitation.go          # Entidade Invitation (convite)
 │   │   │   ├── guest.go               # Entidade Guest + GuestStatus enum
-│   │   │   ├── errors.go              # Erros de domínio
-│   │   │   ├── gift.go                # (Fase 3)
-│   │   │   └── payment.go             # (Fase 3)
+│   │   │   ├── gift.go                # Entidade Gift + GiftStatus enum
+│   │   │   ├── payment.go             # Entidade Payment + PaymentStatus/Method enums
+│   │   │   └── errors.go              # Erros de domínio
 │   │   └── repository/
 │   │       ├── wedding.go             # Interface WeddingRepository
 │   │       ├── invitation.go          # Interface InvitationRepository
 │   │       ├── guest.go               # Interface GuestRepository
-│   │       ├── gift.go                # (Fase 3)
-│   │       └── payment.go             # (Fase 3)
+│   │       ├── gift.go                # Interface GiftRepository
+│   │       └── payment.go             # Interface PaymentRepository
 │   ├── usecase/
 │   │   ├── wedding/
 │   │   │   └── wedding.go             # Authenticate, Seed
@@ -167,11 +167,13 @@ mr-wedding-api/
 │   │   ├── invitation/
 │   │   │   └── invitation.go          # CRUD + AddGuest
 │   │   ├── guest/
-│   │   │   └── guest.go               # CRUD + Dashboard
-│   │   ├── gift/                      # (Fase 3)
-│   │   └── payment/                   # (Fase 3)
+│   │   │   └── guest.go               # CRUD + Dashboard RSVP
+│   │   ├── gift/
+│   │   │   └── gift.go                # CRUD + Dashboard gifts
+│   │   └── payment/
+│   │       └── payment.go             # Purchase, HandleWebhook, GetStatus
 │   ├── dto/
-│   │   ├── request.go                 # Login, RSVP, Invitation, Guest requests
+│   │   ├── request.go                 # Login, RSVP, Invitation, Guest, Gift, Payment requests
 │   │   └── response.go                # Todas as responses + PaginatedResponse
 │   └── infra/
 │       ├── config/
@@ -180,8 +182,11 @@ mr-wedding-api/
 │       │   ├── sqlite.go              # Open() + RunMigrations()
 │       │   ├── wedding_repository.go  # Implementação WeddingRepository
 │       │   ├── invitation_repository.go # Implementação InvitationRepository
-│       │   └── guest_repository.go    # Implementação GuestRepository
-│       ├── gateway/                   # (Fase 3 — Mercado Pago)
+│       │   ├── guest_repository.go    # Implementação GuestRepository
+│       │   ├── gift_repository.go     # Implementação GiftRepository
+│       │   └── payment_repository.go  # Implementação PaymentRepository
+│       ├── gateway/
+│       │   └── mercadopago.go         # SDK Mercado Pago (PIX + cartão)
 │       └── web/
 │           ├── handler/
 │           │   ├── auth.go            # Login admin
@@ -189,7 +194,9 @@ mr-wedding-api/
 │           │   ├── rsvp.go            # Confirm, LookupInvitation (público)
 │           │   ├── invitation.go      # CRUD invitations + AddGuest (admin)
 │           │   ├── guest.go           # CRUD guests (admin)
-│           │   ├── dashboard.go       # Estatísticas RSVP (admin)
+│           │   ├── gift.go            # CRUD gifts (admin) + listagem pública
+│           │   ├── payment.go         # Purchase, GetStatus, Webhook, admin list/detail
+│           │   ├── dashboard.go       # Estatísticas RSVP + gifts (admin)
 │           │   ├── response.go        # respondJSON, respondError
 │           │   └── validator.go       # decodeAndValidate
 │           ├── middleware/
@@ -204,7 +211,11 @@ mr-wedding-api/
 │   ├── 002_create_invitations.up.sql
 │   ├── 002_create_invitations.down.sql
 │   ├── 003_create_guests.up.sql
-│   └── 003_create_guests.down.sql
+│   ├── 003_create_guests.down.sql
+│   ├── 004_create_gifts.up.sql
+│   ├── 004_create_gifts.down.sql
+│   ├── 005_create_payments.up.sql
+│   └── 005_create_payments.down.sql
 ├── docs/
 ├── .cursor/rules/
 ├── .env.example
