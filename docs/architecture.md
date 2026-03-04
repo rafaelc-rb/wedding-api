@@ -152,7 +152,7 @@ CORS_ALLOWED_ORIGINS=http://localhost:3000,https://manurafa.com.br
 ## Estrutura de Diretórios
 
 ```
-mr-wedding-api/
+weddo-api/
 ├── cmd/
 │   └── api/
 │       └── main.go                    # Bootstrap, seed, graceful shutdown

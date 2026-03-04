@@ -3,10 +3,10 @@ package handler
 import (
 	"net/http"
 
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/dto"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web/middleware"
-	giftuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/gift"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/guest"
+	"github.com/by-r2/weddo-api/internal/dto"
+	"github.com/by-r2/weddo-api/internal/infra/web/middleware"
+	giftuc "github.com/by-r2/weddo-api/internal/usecase/gift"
+	"github.com/by-r2/weddo-api/internal/usecase/guest"
 )
 
 type DashboardHandler struct {

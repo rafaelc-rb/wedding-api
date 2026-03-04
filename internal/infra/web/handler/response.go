@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/dto"
+	"github.com/by-r2/weddo-api/internal/dto"
 )
 
 func respondJSON(w http.ResponseWriter, status int, data any) {

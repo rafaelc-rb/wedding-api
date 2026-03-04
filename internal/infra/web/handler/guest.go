@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/entity"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/dto"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web/middleware"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/guest"
+	"github.com/by-r2/weddo-api/internal/domain/entity"
+	"github.com/by-r2/weddo-api/internal/dto"
+	"github.com/by-r2/weddo-api/internal/infra/web/middleware"
+	"github.com/by-r2/weddo-api/internal/usecase/guest"
 )
 
 type GuestHandler struct {

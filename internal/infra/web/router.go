@@ -9,16 +9,16 @@ import (
 	"github.com/go-chi/cors"
 	"github.com/go-chi/httprate"
 
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/repository"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web/handler"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web/middleware"
-	giftuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/gift"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/guest"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/invitation"
-	paymentuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/payment"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/rsvp"
-	sheetsuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/sheets"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/wedding"
+	"github.com/by-r2/weddo-api/internal/domain/repository"
+	"github.com/by-r2/weddo-api/internal/infra/web/handler"
+	"github.com/by-r2/weddo-api/internal/infra/web/middleware"
+	giftuc "github.com/by-r2/weddo-api/internal/usecase/gift"
+	"github.com/by-r2/weddo-api/internal/usecase/guest"
+	"github.com/by-r2/weddo-api/internal/usecase/invitation"
+	paymentuc "github.com/by-r2/weddo-api/internal/usecase/payment"
+	"github.com/by-r2/weddo-api/internal/usecase/rsvp"
+	sheetsuc "github.com/by-r2/weddo-api/internal/usecase/sheets"
+	"github.com/by-r2/weddo-api/internal/usecase/wedding"
 )
 
 type RouterDeps struct {

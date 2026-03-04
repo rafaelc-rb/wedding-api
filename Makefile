@@ -5,7 +5,7 @@ export
 
 BINARY=bin/api
 MAIN=cmd/api/main.go
-IMAGE=wedding-api
+IMAGE=weddo-api
 VERSION?=latest
 
 build:

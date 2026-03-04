@@ -3,10 +3,10 @@ package handler
 import (
 	"net/http"
 
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/entity"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/dto"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web/middleware"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/rsvp"
+	"github.com/by-r2/weddo-api/internal/domain/entity"
+	"github.com/by-r2/weddo-api/internal/dto"
+	"github.com/by-r2/weddo-api/internal/infra/web/middleware"
+	"github.com/by-r2/weddo-api/internal/usecase/rsvp"
 )
 
 type RSVPHandler struct {

@@ -8,9 +8,9 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/entity"
-	gw "github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/gateway"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/repository"
+	"github.com/by-r2/weddo-api/internal/domain/entity"
+	gw "github.com/by-r2/weddo-api/internal/domain/gateway"
+	"github.com/by-r2/weddo-api/internal/domain/repository"
 )
 
 var ErrGiftUnavailable = errors.New("presente não está disponível")

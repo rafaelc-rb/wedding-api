@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/entity"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/repository"
+	"github.com/by-r2/weddo-api/internal/domain/entity"
+	"github.com/by-r2/weddo-api/internal/domain/repository"
 )
 
 type paymentRepository struct {

@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"time"
 
-	gw "github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/gateway"
+	gw "github.com/by-r2/weddo-api/internal/domain/gateway"
 
 	mpconfig "github.com/mercadopago/sdk-go/pkg/config"
 	"github.com/mercadopago/sdk-go/pkg/payment"

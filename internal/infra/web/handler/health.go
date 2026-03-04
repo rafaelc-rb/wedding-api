@@ -3,7 +3,7 @@ package handler
 import (
 	"net/http"
 
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/dto"
+	"github.com/by-r2/weddo-api/internal/dto"
 )
 
 func Health(w http.ResponseWriter, r *http.Request) {

@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"time"
 
-	gw "github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/gateway"
+	gw "github.com/by-r2/weddo-api/internal/domain/gateway"
 )
 
 const infinitePayBaseURL = "https://api.infinitepay.io/invoices/public/checkout"

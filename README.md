@@ -1,8 +1,8 @@
-# mr-wedding-api
+# Weddo API
 
 API multi-tenant para sites de casamento. Fornece confirmação de presença (RSVP), lista de presentes com pagamento integrado (PIX/cartão via InfinitePay ou Mercado Pago) e painel administrativo.
 
-Cada casamento é um tenant isolado. O primeiro tenant é o casamento **Manoela & Rafael — 07.07.2026** ([frontend](../mr-wedding/)).
+Cada casamento é um tenant isolado. O primeiro tenant é o casamento **Manoela & Rafael — 07.07.2026**.
 
 ## Stack
 

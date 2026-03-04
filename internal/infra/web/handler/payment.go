@@ -6,10 +6,10 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/entity"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/dto"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web/middleware"
-	paymentuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/payment"
+	"github.com/by-r2/weddo-api/internal/domain/entity"
+	"github.com/by-r2/weddo-api/internal/dto"
+	"github.com/by-r2/weddo-api/internal/infra/web/middleware"
+	paymentuc "github.com/by-r2/weddo-api/internal/usecase/payment"
 )
 
 type PaymentHandler struct {

@@ -7,7 +7,7 @@ import (
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/gateway"
+	"github.com/by-r2/weddo-api/internal/domain/gateway"
 )
 
 type OAuthProvider struct {

@@ -4,9 +4,9 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/domain/entity"
-	"github.com/rafaeljurkfitz/mr-wedding-api/internal/infra/web/middleware"
-	sheetsuc "github.com/rafaeljurkfitz/mr-wedding-api/internal/usecase/sheets"
+	"github.com/by-r2/weddo-api/internal/domain/entity"
+	"github.com/by-r2/weddo-api/internal/infra/web/middleware"
+	sheetsuc "github.com/by-r2/weddo-api/internal/usecase/sheets"
 )
 
 type SheetsHandler struct {
